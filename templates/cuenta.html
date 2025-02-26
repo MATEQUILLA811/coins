@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Cuenta Cripto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+       
+       body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(45deg, #141e30, #243b55);
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 400px;
+        }
+        .modal-body{
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Create Criptomoneda</h2>
+        <p>Para continuar.</p>
+        <input type="checkbox" id="termsCheckbox"> Acepto las condiciones de uso y políticas de privacidad
+        <br><br>
+        <button id="createAccountBtn" class="btn btn-primary" disabled>Crear Cuenta</button>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="accountCreatedModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Estado de la Cuenta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById("termsCheckbox").addEventListener("change", function() {
+            document.getElementById("createAccountBtn").disabled = !this.checked;
+        });
+
+        document.getElementById("createAccountBtn").addEventListener("click", function() {
+            fetch("/new", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ok:"ok"})
+            })
+            .then(response => response.json().then(data => ({ 
+                status: response.status, body: data 
+            })))
+            .then(result => {
+                let modalBody = document.getElementById("modalBody");
+                if (result.status === 200) {
+                    modalBody.innerHTML = "✅ " + result.body.message;
+                   /* fetch("/create_block", {  // Cambiar "/new" por "/create_block"
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ amount: 0 })  // Enviar un monto válido
+                    })*/
+                   fetch("/create_block")
+                    .then(res=>res.json())
+                    .then(data=>{
+                        console.log(data)
+                         location.href="/"
+                    })
+                } else {
+                    modalBody.innerHTML = "⚠️ " + result.body.message;
+                    location.href="/"
+                }
+                new bootstrap.Modal(document.getElementById('accountCreatedModal')).show();
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    </script>
+</body>
+
+</html>
