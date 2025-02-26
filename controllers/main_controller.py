@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request,jsonify,url_for,redirect,send_from_directory
+from flask import Flask, render_template, request,jsonify,url_for,redirect,send_from_directory,Blueprint
 from models.blockchain import load_json,get_sender_balance,verificar_claves,obtener_balance,cargar_blockchain,obtener_ultimo_bloque,calcular_hash_bloque,guardar_bloque,tiempo_relativo
 import ecdsa
 import base64
@@ -7,7 +7,11 @@ import hashlib
 import os
 import json
 
-app = Flask(__name__, template_folder="../templates")  # 📌 Indica la ruta de las plantillas
+
+# 📌 Crear un Blueprint para manejar rutas
+app = Blueprint("routes", __name__, template_folder="../templates")
+
+#app = Flask(__name__, template_folder="../templates")  # 📌 Indica la ruta de las plantillas
 
 #pasar es al controller
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
