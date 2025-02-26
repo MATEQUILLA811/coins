@@ -9,9 +9,9 @@ import json
 
 
 # 📌 Crear un Blueprint para manejar rutas
-app = Blueprint("routes", __name__, template_folder="../templates")
+#app = Blueprint("routes", __name__, template_folder="../templates")
 
-#app = Flask(__name__, template_folder="../templates")  # 📌 Indica la ruta de las plantillas
+app = Flask(__name__, template_folder="../templates")  # 📌 Indica la ruta de las plantillas
 
 #pasar es al controller
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
